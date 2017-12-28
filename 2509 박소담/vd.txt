@@ -1,0 +1,93 @@
+#include <iostream>
+#include <string.h> // strcpy()
+#define _CRT_SECURE_NO_WARNINGS
+using namespace std;
+
+class Student{
+
+private:
+	int nNo; //번호
+	char *szName; //이름
+//private: SetStudent(int no, char *pName)과  PrintStudent() 함수의 접근제한자는 private가 됨 
+public:
+	void SetStudent(int no, char *pName); // Student* this는 컴파일러에서 자동을 컴파일러가 해주므로 밑에서 this->를 사용하더라도 오류가 뜨지 않는다. 그러나 첫 번째 매개변수에 Student* this가 오면 오류 뜬다
+	void PrintStudent();
+	Student(){
+		//*szName = new char[7];
+		nNo = 0;
+		szName = 0;
+		//strcpy_s(szName, "이름없음");
+		cout << "기본생성자"<<endl;
+	}
+	~Student(){
+		if (szName != 0){
+			cout << szName << endl;
+		}
+		else {
+			delete szName;
+			cout  << "이름없음" << endl;
+		}
+	}
+	Student(int, char *); //프로토 타입은 타입만 있으면 된다.
+	
+};
+Student::Student(int nNo, char *name){
+		cout << "매개변수 있는 생성자"<<endl;
+		szName = new char[strlen(name)+1];
+		
+		this->nNo=nNo; 
+		strcpy(szName,name);
+	}
+
+/*struct A{
+	int a;
+};
+
+struct{
+	int a;
+}B;*/
+
+void Student::SetStudent(int no, char *pName){
+	(*this).nNo = no; // this-> 와 (*this). 같음
+	//strcpy_s(this-> szName, pName);
+}
+
+void Student::PrintStudent(){
+	if (szName != 0){
+		cout << "번호: " << nNo << ", 이름 : " << szName << endl;
+	}
+	else {
+		cout << "번호: " << nNo << ", 이름 : " << "이름없음" << endl;
+	}
+}
+
+
+int main(void){
+	int no;
+	char name[20];
+	
+	Student student; // 기본 생성자 호출
+	Student stu(2518,"임청");
+	Student *p = new Student(); // 기본 생성자 호출
+	Student *p1 = new Student(1111,"홍길동");
+	cout << "학생 번호 입력 : ";
+	cin >> no;
+	cout << "학생 이름 입력 : ";
+	cin >> name;
+	/*A k1;
+	B k2
+	k1.a = 10;
+	k2.a = 12;*/
+	
+	student.PrintStudent();
+	stu.PrintStudent();
+	p->SetStudent(no, name);
+	p->PrintStudent();
+	p1->PrintStudent();
+	//student.nNo = 10;
+	cout << sizeof(Student) << endl;
+	delete p; //객체 p가 먼저 사라진다.
+	delete p1;
+
+	return 0;
+}
